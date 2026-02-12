@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MicroGame Rush</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700;900&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div id="app">
+        <!-- Background Elements -->
+        <div class="bg-shape"></div>
+        <div class="bg-shape"></div>
+
+        <!-- Start Screen -->
+        <div id="start-screen" class="screen active">
+            <h1 class="logo">MICRO<span class="highlight">RUSH</span></h1>
+            <p class="instruction">4 Vidas. Velocidad Extrema. ¿Estás listo?</p>
+            <button id="start-btn" class="btn primary">COMENZAR</button>
+        </div>
+
+        <!-- Game Screen -->
+        <div id="game-screen" class="screen">
+            <div class="hud">
+
+                <div class="lives">
+                    <span class="heart">❤️</span>
+                    <span class="heart">❤️</span>
+                    <span class="heart">❤️</span>
+                    <span class="heart">❤️</span>
+                </div>
+                <div class="score-container">SCORE: <span id="score">0</span></div>
+            </div>
+
+            <div class="timer-bar-container">
+                <div id="timer-bar" class="timer-bar"></div>
+            </div>
+
+            <div id="game-area" class="game-area">
+                <!-- Microgame content goes here -->
+                <h2 id="instruction-text" class="game-instruction"></h2>
+                <div id="interactive-area"></div>
+            </div>
+        </div>
+
+        <!-- Game Over Screen -->
+        <div id="game-over-screen" class="screen">
+            <h1 class="game-over-title">GAME OVER</h1>
+            <p class="final-score">Puntuación Final: <span id="final-score">0</span></p>
+            <button id="restart-btn" class="btn secondary">REINTENTAR</button>
+        </div>
+    </div>
+
+    <script src="js/game.js"></script>
+</body>
+
+</html>
