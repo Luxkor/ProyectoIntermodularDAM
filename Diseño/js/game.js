@@ -46,169 +46,131 @@ class Game {
         // Microgames Registry
         this.microgames = [
             {
-                id: 'mash',
-                instruction: '¡MACHACA EL BOTÓN!',
+                id: 'beach',
+                instruction: '¡LIMPIA LA PLAYA!',
                 setup: (container, difficulty) => {
-                    const clicksNeeded = 3 + Math.floor(difficulty / 2); // Increase clicks by 1 every 2 levels
-                    let clicks = 0;
+                    const beach = document.createElement('div');
+                    beach.className = 'beach-container';
+                    container.appendChild(beach);
 
-                    const btn = document.createElement('button');
-                    btn.className = 'game-btn';
-                    btn.textContent = clicksNeeded;
-                    btn.style.fontSize = '2rem';
-                    btn.style.color = 'white';
+                    const bin = document.createElement('div');
+                    bin.className = 'trash-can';
+                    bin.innerHTML = '🗑️';
+                    beach.appendChild(bin);
 
-                    btn.onmousedown = () => { // Using onmousedown for faster response
-                        clicks++;
-                        const remaining = clicksNeeded - clicks;
-                        btn.textContent = remaining;
-                        btn.style.transform = `scale(${0.9 + (Math.random() * 0.2)})`;
+                    const trashEmojis = ['🧴', '🥫', '🍕', '🥤', '🍌', '🦴'];
+                    const numItems = 2 + Math.min(2, Math.floor(difficulty / 10)); // Fewer items at start
+                    let itemsLeft = numItems;
 
-                        // Particle effect could go here
+                    const createTrash = () => {
+                        const item = document.createElement('div');
+                        item.className = 'trash-item';
+                        item.innerHTML = trashEmojis[Math.floor(Math.random() * trashEmojis.length)];
 
-                        if (clicks >= clicksNeeded) {
-                            this.onWin();
+                        // Random position - avoid the bin area
+                        const x = Math.random() * (container.clientWidth - 80);
+                        const y = Math.random() * (container.clientHeight - 80);
+                        item.style.left = `${x}px`;
+                        item.style.top = `${y}px`;
+
+                        let isDragging = false;
+                        let startX, startY;
+                        let startLeft, startTop;
+
+                        const onMove = (e) => {
+                            if (!isDragging) return;
+                            const clientX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
+                            const clientY = e.type.includes('touch') ? e.touches[0].clientY : e.clientY;
+
+                            const deltaX = clientX - startX;
+                            const deltaY = clientY - startY;
+
+                            item.style.left = `${startLeft + deltaX}px`;
+                            item.style.top = `${startTop + deltaY}px`;
+
+                            const itemRect = item.getBoundingClientRect();
+                            const binRect = bin.getBoundingClientRect();
+
+                            const isOver = (
+                                itemRect.left < binRect.right &&
+                                itemRect.right > binRect.left &&
+                                itemRect.top < binRect.bottom &&
+                                itemRect.bottom > binRect.top
+                            );
+
+                            if (isOver) {
+                                bin.classList.add('hover');
+                            } else {
+                                bin.classList.remove('hover');
+                            }
+                        };
+
+                        const onEnd = () => {
+                            if (!isDragging) return;
+                            isDragging = false;
+
+                            const itemRect = item.getBoundingClientRect();
+                            const binRect = bin.getBoundingClientRect();
+
+                            const itemCenter = {
+                                x: itemRect.left + itemRect.width / 2,
+                                y: itemRect.top + itemRect.height / 2
+                            };
+                            const binCenter = {
+                                x: binRect.left + binRect.width / 2,
+                                y: binRect.top + binRect.height / 2
+                            };
+
+                            const dist = Math.sqrt(Math.pow(itemCenter.x - binCenter.x, 2) + Math.pow(itemCenter.y - binCenter.y, 2));
+
+                            if (dist < 70) { // Catch radius
+                                item.style.transform = 'scale(0)';
+                                item.style.opacity = '0';
+                                setTimeout(() => item.remove(), 200);
+                                bin.classList.remove('hover');
+                                itemsLeft--;
+
+                                if (itemsLeft <= 0) {
+                                    setTimeout(() => this.onWin(), 100);
+                                }
+                            }
+
+                            window.removeEventListener('mousemove', onMove);
+                            window.removeEventListener('mouseup', onEnd);
+                            window.removeEventListener('touchmove', onMove);
+                            window.removeEventListener('touchend', onEnd);
+                        };
+
+                        const onStart = (e) => {
+                            isDragging = true;
+                            startX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
+                            startY = e.type.includes('touch') ? e.touches[0].clientY : e.clientY;
+
+                            startLeft = parseInt(item.style.left) || 0;
+                            startTop = parseInt(item.style.top) || 0;
+
+                            window.addEventListener('mousemove', onMove);
+                            window.addEventListener('mouseup', onEnd);
+                            window.addEventListener('touchmove', onMove, { passive: false });
+                            window.addEventListener('touchend', onEnd);
+
+                            if (e.cancelable) e.preventDefault();
+                        };
+
+                        item.addEventListener('mousedown', onStart);
+                        item.addEventListener('touchstart', onStart, { passive: false });
+
+                        beach.appendChild(item);
+                    };
+
+                    // Initial spawn
+                    setTimeout(() => {
+                        for (let i = 0; i < numItems; i++) {
+                            createTrash();
                         }
-                    };
-
-                    container.appendChild(btn);
-
-                    return {
-                        cleanup: () => { }
-                    };
-                }
-            },
-            {
-                id: 'math',
-                instruction: '¡CALCULA!',
-                setup: (container, difficulty) => {
-                    const range = 5 + (difficulty * 2);
-                    const n1 = Math.floor(Math.random() * range) + 1;
-                    const n2 = Math.floor(Math.random() * range) + 1;
-                    const correctAns = n1 + n2;
-
-                    // Generate wrong answer
-                    let wrongAns = correctAns + (Math.random() > 0.5 ? 1 : -1) * (Math.floor(Math.random() * 3) + 1);
-                    if (wrongAns === correctAns) wrongAns += 1;
-                    if (wrongAns < 0) wrongAns = 0;
-
-                    const question = document.createElement('div');
-                    question.style.fontSize = '3rem';
-                    question.style.fontWeight = 'bold';
-                    question.style.marginBottom = '1rem';
-                    question.textContent = `${n1} + ${n2}`;
-                    container.appendChild(question);
-
-                    const optionsDiv = document.createElement('div');
-                    optionsDiv.className = 'math-options-container';
-
-                    const btn1 = document.createElement('div');
-                    btn1.className = 'math-option';
-                    const btn2 = document.createElement('div');
-                    btn2.className = 'math-option';
-
-                    // Randomize position
-                    if (Math.random() > 0.5) {
-                        btn1.textContent = correctAns;
-                        btn1.dataset.correct = 'true';
-                        btn2.textContent = wrongAns;
-                        btn2.dataset.correct = 'false';
-                    } else {
-                        btn1.textContent = wrongAns;
-                        btn1.dataset.correct = 'false';
-                        btn2.textContent = correctAns;
-                        btn2.dataset.correct = 'true';
-                    }
-
-                    const handleAns = (e) => {
-                        if (e.target.dataset.correct === 'true') {
-                            this.onWin();
-                        } else {
-                            this.onFail();
-                        }
-                    };
-
-                    btn1.onclick = handleAns;
-                    btn2.onclick = handleAns;
-
-                    optionsDiv.appendChild(btn1);
-                    optionsDiv.appendChild(btn2);
-                    container.appendChild(optionsDiv);
+                    }, 50);
 
                     return { cleanup: () => { } };
-                }
-            },
-            {
-                id: 'space',
-                instruction: '¡ESPERA...',
-                setup: (container, difficulty) => {
-                    const hintA = document.createElement('div');
-                    hintA.className = 'key-hint';
-                    hintA.textContent = '⛔'; // Stop sign or wait
-                    container.appendChild(hintA);
-
-                    let canPress = false;
-                    let triggered = false;
-
-                    // Random delay between 500ms and 2000ms (clamped by game time)
-                    // We need to ensure the "GO" signal happens before time runs out.
-                    // Max time is this.maxTime. Let's say signal must appear at least 500ms before end.
-                    const safeMaxTime = Math.max(500, this.maxTime - 800);
-                    const delay = 500 + Math.random() * (Math.min(2000, safeMaxTime));
-
-                    const timeout = setTimeout(() => {
-                        triggered = true;
-                        canPress = true;
-                        this.hud.instruction.textContent = "¡ESPACIO YA!";
-                        this.hud.instruction.style.color = '#00f3ff';
-                        hintA.textContent = 'SPACE';
-                        hintA.style.color = '#00f3ff';
-                        container.style.backgroundColor = 'rgba(0, 243, 255, 0.1)';
-                    }, delay);
-
-                    return {
-                        onInput: (e) => {
-                            if (e.code === 'Space') {
-                                if (canPress) {
-                                    this.onWin();
-                                } else {
-                                    this.onFail(); // Pressed too early
-                                }
-                            }
-                        },
-                        cleanup: () => {
-                            clearTimeout(timeout);
-                            container.style.backgroundColor = '';
-                        }
-                    };
-                }
-            },
-            {
-                id: 'arrows',
-                instruction: '¡DIRECCIÓN!',
-                setup: (container, difficulty) => {
-                    const directions = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'];
-                    const symbols = { 'ArrowUp': '⬆️', 'ArrowDown': '⬇️', 'ArrowLeft': '⬅️', 'ArrowRight': '➡️' };
-                    const target = directions[Math.floor(Math.random() * directions.length)];
-
-                    const arrowDisplay = document.createElement('div');
-                    arrowDisplay.style.fontSize = '6rem';
-                    arrowDisplay.textContent = symbols[target];
-                    arrowDisplay.style.filter = 'drop-shadow(0 0 10px rgba(0,243,255,0.5))';
-                    container.appendChild(arrowDisplay);
-
-                    return {
-                        onInput: (e) => {
-                            if (directions.includes(e.code)) {
-                                if (e.code === target) {
-                                    this.onWin();
-                                } else {
-                                    this.onFail();
-                                }
-                            }
-                        },
-                        cleanup: () => { }
-                    };
                 }
             }
         ];
@@ -265,10 +227,9 @@ class Game {
         clearInterval(this.gameInterval);
         this.hud.interactiveArea.innerHTML = ''; // Clear previous
 
-        // Difficulty Scaling: Time gets shorter, but clamped to 1.5s minimum
-        // Curve: 4s -> 1.5s. Reduce 100ms every 2 points?
-        // Logic: 0 score = 4000ms. 20 score = 2000ms.
-        this.maxTime = Math.max(1500, this.baseTime - (this.score * 100));
+        // Difficulty Scaling: Every 10 points, time decreases by 400ms
+        const difficultyLevel = Math.floor(this.score / 10);
+        this.maxTime = Math.max(1200, this.baseTime - (difficultyLevel * 400));
 
         this.timer = this.maxTime;
 
