@@ -19,7 +19,26 @@
         <div id="start-screen" class="screen active">
             <h1 class="logo">MICRO<span class="highlight">RUSH</span></h1>
             <p class="instruction">4 Vidas. Velocidad Extrema. ¿Estás listo?</p>
-            <button id="start-btn" class="btn primary">COMENZAR</button>
+            <div class="menu-buttons">
+                <button id="start-btn" class="btn primary">COMENZAR</button>
+                <button id="diary-btn" class="btn secondary small">DIARIO DEV</button>
+            </div>
+        </div>
+
+        <!-- Diary Modal -->
+        <div id="diary-modal" class="modal">
+            <div class="modal-content">
+                <h2>DIARIO DE DESARROLLO</h2>
+                <div class="diary-text">
+                    <p><strong>Día 1:</strong> Inicio del proyecto "MicroGame Rush". Implementada la estructura base y
+                        el motor de juego.</p>
+                    <img src="img/tablero_kanban.png" alt="Tablero Kanban" class="diary-img">
+                    <p><strong>Estado Actual:</strong> Sistema de vidas y puntuación funcional. Los minijuegos están
+                        deshabilitados temporalmente para ajustar el flujo principal (Game Loop).</p>
+                    <p><strong>Próximos pasos:</strong> Re-integrar minijuegos y pulir animaciones.</p>
+                </div>
+                <button id="close-diary-btn" class="btn primary small">CERRAR</button>
+            </div>
         </div>
 
         <!-- Game Screen -->

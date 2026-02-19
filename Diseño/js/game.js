@@ -23,6 +23,19 @@ class Game {
 
         document.getElementById('start-btn').addEventListener('click', () => this.startGame());
         document.getElementById('restart-btn').addEventListener('click', () => this.resetGame());
+
+        // Diary Logic
+        this.diaryModal = document.getElementById('diary-modal');
+        document.getElementById('diary-btn').addEventListener('click', () => this.openDiary());
+        document.getElementById('close-diary-btn').addEventListener('click', () => this.closeDiary());
+    }
+
+    openDiary() {
+        this.diaryModal.classList.add('active');
+    }
+
+    closeDiary() {
+        this.diaryModal.classList.remove('active');
     }
 
     resetGame() {
