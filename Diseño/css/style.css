@@ -229,10 +229,18 @@ p {
 
 #interactive-area {
     width: 100%;
+    flex: 1;
+    position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 200px;
+    min-height: 180px;
+}
+
+/* Canvas-based microgames fill the area */
+#interactive-area canvas {
+    display: block;
+    border-radius: 15px;
 }
 
 /* Interactive Elements for Microgames */
