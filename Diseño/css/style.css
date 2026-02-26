@@ -232,11 +232,25 @@ p {
 #interactive-area {
     width: 100%;
     flex: 1;
+<<<<<<< HEAD
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 600px;
     position: relative;
+=======
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 180px;
+}
+
+/* Canvas-based microgames fill the area */
+#interactive-area canvas {
+    display: block;
+    border-radius: 15px;
+>>>>>>> 9d5f0b15aa3468030e901ac5030002fecf45aa44
 }
 
 /* Interactive Elements for Microgames */
