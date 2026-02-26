@@ -76,8 +76,9 @@ window.Microgames.cooking = {
 
                     if (currentIngredients.length === recipe.ingredients.length) {
                         plate.innerHTML = '✨🥘✨';
-                        setTimeout(() => game.onWin(), 400);
+                        game.onWin();
                     }
+
                 } else {
                     // Wrong ingredient
                     btn.classList.add('wrong');

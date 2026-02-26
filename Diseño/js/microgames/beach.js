@@ -85,8 +85,9 @@ window.Microgames.beach = {
                     itemsLeft--;
 
                     if (itemsLeft <= 0) {
-                        setTimeout(() => game.onWin(), 100);
+                        game.onWin();
                     }
+
                 }
 
                 window.removeEventListener('mousemove', onMove);

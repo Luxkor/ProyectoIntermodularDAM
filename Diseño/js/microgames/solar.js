@@ -303,8 +303,9 @@ window.Microgames.solar = {
             if (energy >= 100 && !finished) {
                 finished = true;
                 cancelAnimationFrame(rafId);
-                setTimeout(() => game.onWin(), 250);
+                game.onWin();
                 return;
+
             }
 
             rafId = requestAnimationFrame(update);

@@ -13,16 +13,16 @@ window.Microgames.trashTruck = {
 
     setup(container, score, game) {
         /* ---- CONFIG basada en dificultad (score) ----------- */
-        const diffLevel  = Math.floor(score / 5);            // cada 5 puntos sube
+        const diffLevel = Math.floor(score / 5);            // cada 5 puntos sube
         const truckSpeed = 1.8 + diffLevel * 0.55;           // px/frame
-        const bagCount   = Math.min(1 + Math.floor(diffLevel * 0.6), 4);
-        const GRAVITY    = 0.42;
-        const BOUNCE     = 0.28;
-        const FRICTION   = 0.87;
-        const BAG_R      = 22;
+        const bagCount = Math.min(1 + Math.floor(diffLevel * 0.6), 4);
+        const GRAVITY = 0.42;
+        const BOUNCE = 0.28;
+        const FRICTION = 0.87;
+        const BAG_R = 22;
 
         /* ---- Crear canvas dentro del container ------------- */
-        const canvas  = document.createElement('canvas');
+        const canvas = document.createElement('canvas');
         canvas.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;border-radius:15px;cursor:default;';
         // Make container relative so canvas overlays correctly
         container.style.position = 'relative';
@@ -33,9 +33,9 @@ window.Microgames.trashTruck = {
 
         function resize() {
             const rect = container.getBoundingClientRect();
-            W = rect.width  || container.offsetWidth  || 520;
+            W = rect.width || container.offsetWidth || 520;
             H = rect.height || container.offsetHeight || 220;
-            canvas.width  = W;
+            canvas.width = W;
             canvas.height = H;
             groundY = H * 0.78;
         }
@@ -56,13 +56,13 @@ window.Microgames.trashTruck = {
                 this.x = Math.random() * (W - this.w);
                 this.y = groundY - this.h;
             },
-            get openLeft()  { return this.x + this.w * 0.12; },
+            get openLeft() { return this.x + this.w * 0.12; },
             get openRight() { return this.x + this.w * 0.65; },
-            get openTop()   { return this.y + this.h * 0.08; },
+            get openTop() { return this.y + this.h * 0.08; },
             update() {
                 this.x += this.speed * this.dir;
                 if (this.x + this.w >= W) { this.x = W - this.w; this.dir = -1; }
-                if (this.x <= 0)          { this.x = 0;           this.dir =  1; }
+                if (this.x <= 0) { this.x = 0; this.dir = 1; }
                 this.y = groundY - this.h;
             },
             draw() {
@@ -107,7 +107,7 @@ window.Microgames.trashTruck = {
         truck.init();
 
         /* ---- BAGS ------------------------------------------ */
-        const BAG_PALETTE = ['#388e3c','#1565c0','#6a1b9a','#bf360c','#37474f','#00838f'];
+        const BAG_PALETTE = ['#388e3c', '#1565c0', '#6a1b9a', '#bf360c', '#37474f', '#00838f'];
         const bags = [];
 
         for (let i = 0; i < bagCount; i++) {
@@ -192,7 +192,7 @@ window.Microgames.trashTruck = {
             ctx.fillStyle = grad;
             ctx.fillRect(0, 0, W, groundY);
             // trees
-            [[0.05,1],[0.2,0.85],[0.5,0.9],[0.78,0.95],[0.93,0.88]].forEach(([tx,sc]) => {
+            [[0.05, 1], [0.2, 0.85], [0.5, 0.9], [0.78, 0.95], [0.93, 0.88]].forEach(([tx, sc]) => {
                 const bx = W * tx, th = groundY * 0.35 * sc;
                 ctx.fillStyle = '#6d4c41';
                 ctx.fillRect(bx - 3, groundY - th * 0.4, 6, th * 0.4);
@@ -200,10 +200,10 @@ window.Microgames.trashTruck = {
                 ctx.beginPath(); ctx.arc(bx, groundY - th * 0.4 - th * 0.35, th * 0.28, 0, Math.PI * 2); ctx.fill();
             });
             // clouds
-            [[0.12,18],[0.42,12],[0.72,20]].forEach(([cx,cy]) => {
+            [[0.12, 18], [0.42, 12], [0.72, 20]].forEach(([cx, cy]) => {
                 ctx.fillStyle = 'rgba(255,255,255,0.82)';
-                [[0,0,18],[20,-7,13],[-18,-5,11],[34,2,10],[-32,3,10]].forEach(([dx,dy,r]) => {
-                    ctx.beginPath(); ctx.arc(W*cx+dx, cy+dy, r, 0, Math.PI*2); ctx.fill();
+                [[0, 0, 18], [20, -7, 13], [-18, -5, 11], [34, 2, 10], [-32, 3, 10]].forEach(([dx, dy, r]) => {
+                    ctx.beginPath(); ctx.arc(W * cx + dx, cy + dy, r, 0, Math.PI * 2); ctx.fill();
                 });
             });
         }
@@ -276,15 +276,15 @@ window.Microgames.trashTruck = {
             }
         }
 
-        canvas.addEventListener('mousedown',  onDown);
-        window.addEventListener('mousemove',  onMove);
-        window.addEventListener('mouseup',    onUp);
+        canvas.addEventListener('mousedown', onDown);
+        window.addEventListener('mousemove', onMove);
+        window.addEventListener('mouseup', onUp);
         canvas.addEventListener('touchstart', onDown, { passive: false });
-        window.addEventListener('touchmove',  onMove, { passive: false });
-        window.addEventListener('touchend',   onUp);
+        window.addEventListener('touchmove', onMove, { passive: false });
+        window.addEventListener('touchend', onUp);
 
         /* ---- MAIN LOOP ------------------------------------ */
-        let rafId    = null;
+        let rafId = null;
         let finished = false;
 
         function update() {
@@ -300,23 +300,23 @@ window.Microgames.trashTruck = {
                 if (bag.scored || bag.dragged) { drawBag(bag); return; }
 
                 bag.vy += GRAVITY;
-                bag.x  += bag.vx;
-                bag.y  += bag.vy;
+                bag.x += bag.vx;
+                bag.y += bag.vy;
                 bag.vx *= FRICTION;
 
                 // Ground
                 if (bag.y + BAG_R >= groundY) {
-                    bag.y  = groundY - BAG_R;
+                    bag.y = groundY - BAG_R;
                     bag.vy = -bag.vy * BOUNCE;
                     bag.vx *= 0.82;
                     if (Math.abs(bag.vy) < 0.6) { bag.vy = 0; bag.onGround = true; }
                 }
                 // Wall clamp
-                if (bag.x - BAG_R < 0)  { bag.x = BAG_R;     bag.vx = Math.abs(bag.vx) * 0.5; }
-                if (bag.x + BAG_R > W)   { bag.x = W - BAG_R; bag.vx = -Math.abs(bag.vx) * 0.5; }
+                if (bag.x - BAG_R < 0) { bag.x = BAG_R; bag.vx = Math.abs(bag.vx) * 0.5; }
+                if (bag.x + BAG_R > W) { bag.x = W - BAG_R; bag.vx = -Math.abs(bag.vx) * 0.5; }
 
                 // Score check
-                const inX = bag.x > truck.openLeft  && bag.x < truck.openRight;
+                const inX = bag.x > truck.openLeft && bag.x < truck.openRight;
                 const inY = bag.y - BAG_R < truck.openTop + 18 && bag.y + BAG_R > truck.openTop - 10;
                 if (inX && inY && bag.vy > 0) {
                     bag.scored = true;
@@ -332,8 +332,9 @@ window.Microgames.trashTruck = {
             if (!finished && bags.every(b => b.scored)) {
                 finished = true;
                 cancelAnimationFrame(rafId);
-                setTimeout(() => game.onWin(), 300);
+                game.onWin();
                 return;
+
             }
 
             rafId = requestAnimationFrame(update);
@@ -346,12 +347,12 @@ window.Microgames.trashTruck = {
             cleanup() {
                 finished = true;
                 cancelAnimationFrame(rafId);
-                canvas.removeEventListener('mousedown',  onDown);
-                window.removeEventListener('mousemove',  onMove);
-                window.removeEventListener('mouseup',    onUp);
+                canvas.removeEventListener('mousedown', onDown);
+                window.removeEventListener('mousemove', onMove);
+                window.removeEventListener('mouseup', onUp);
                 canvas.removeEventListener('touchstart', onDown);
-                window.removeEventListener('touchmove',  onMove);
-                window.removeEventListener('touchend',   onUp);
+                window.removeEventListener('touchmove', onMove);
+                window.removeEventListener('touchend', onUp);
                 canvas.remove();
             }
         };

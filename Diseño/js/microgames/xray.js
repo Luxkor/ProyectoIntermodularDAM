@@ -46,8 +46,9 @@ window.Microgames.xray = {
             e.stopPropagation();
             target.style.transform = 'scale(2)';
             target.style.filter = 'brightness(2) drop-shadow(0 0 10px #00f3ff)';
-            setTimeout(() => game.onWin(), 200);
+            game.onWin();
         };
+
 
         xrayContainer.addEventListener('mousemove', moveHandler);
         xrayContainer.addEventListener('touchmove', moveHandler, { passive: false });
