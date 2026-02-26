@@ -92,6 +92,7 @@ body {
 
 .screen.active {
     display: flex;
+    gap: 1.5rem;
     animation: fadeIn 0.5s ease-out;
 }
 
@@ -164,15 +165,15 @@ p {
 
 /* HUD */
 .hud {
-    position: absolute;
-    top: 2rem;
-    width: 90%;
-    max-width: 800px;
+    position: relative;
+    width: 95%;
+    max-width: 900px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     font-size: 1.5rem;
     font-weight: 700;
+    z-index: 10;
 }
 
 .lives {
@@ -185,13 +186,12 @@ p {
 }
 
 .timer-bar-container {
-    position: absolute;
-    top: 5rem;
-    width: 90%;
-    max-width: 800px;
-    height: 10px;
+    position: relative;
+    width: 95%;
+    max-width: 900px;
+    height: 12px;
     background: rgba(255, 255, 255, 0.1);
-    border-radius: 5px;
+    border-radius: 6px;
     overflow: hidden;
 }
 
@@ -207,17 +207,19 @@ p {
 .game-area {
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
     width: 100%;
-    max-width: 600px;
-    height: 400px;
+    max-width: 900px;
+    height: 950px;
     background: var(--glass-bg);
     border: 1px solid var(--glass-border);
     backdrop-filter: blur(10px);
-    border-radius: 20px;
-    padding: 2rem;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    border-radius: 24px;
+    padding: 3rem;
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.4);
+    position: relative;
+    overflow: hidden;
 }
 
 .game-instruction {
@@ -230,17 +232,11 @@ p {
 #interactive-area {
     width: 100%;
     flex: 1;
-    position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 180px;
-}
-
-/* Canvas-based microgames fill the area */
-#interactive-area canvas {
-    display: block;
-    border-radius: 15px;
+    min-height: 600px;
+    position: relative;
 }
 
 /* Interactive Elements for Microgames */
@@ -415,6 +411,7 @@ p {
     background: var(--primary-color);
     border-radius: 4px;
 }
+
 /* Beach Microgame Styles */
 .beach-container {
     position: relative;
@@ -448,7 +445,7 @@ p {
     z-index: 10;
     user-select: none;
     touch-action: none;
-    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
 }
 
 .trash-item:active {

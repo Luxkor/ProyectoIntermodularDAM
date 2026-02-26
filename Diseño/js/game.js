@@ -7,6 +7,7 @@ class Game {
         this.maxTime = this.baseTime;
         this.gameInterval = null;
         this.currentMicrogame = null;
+        this.lastMicrogameId = null;
         this.isGameActive = false;
 
         // DOM Elements
@@ -120,8 +121,10 @@ class Game {
 
         this.timer = this.maxTime;
 
-        // Pick Random Game
-        const gameDef = this.microgames[Math.floor(Math.random() * this.microgames.length)];
+        // Pick Random Game (Avoiding repeats)
+        const pool = this.microgames.filter(m => m.id !== this.lastMicrogameId);
+        const gameDef = pool[Math.floor(Math.random() * pool.length)];
+        this.lastMicrogameId = gameDef.id;
 
         // Setup UI
         this.hud.instruction.textContent = gameDef.instruction;
@@ -155,7 +158,7 @@ class Game {
     }
 
     onWin() {
-        if (!this.isGameActive) return;
+        if (!this.isGameActive || !this.currentMicrogame) return;
         this.cleanupCurrentGame();
 
         this.score++;
@@ -169,7 +172,7 @@ class Game {
     }
 
     onFail() {
-        if (!this.isGameActive) return;
+        if (!this.isGameActive || !this.currentMicrogame) return;
         this.cleanupCurrentGame();
 
         this.lives--;
