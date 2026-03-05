@@ -153,7 +153,11 @@ class Game {
         else this.hud.timerBar.style.backgroundColor = '';
 
         if (this.timer <= 0) {
-            this.onFail();
+            if (this.currentMicrogame && this.currentMicrogame.def.isSurvival) {
+                this.onWin();
+            } else {
+                this.onFail();
+            }
         }
     }
 
