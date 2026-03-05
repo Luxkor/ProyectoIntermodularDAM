@@ -51,7 +51,7 @@ window.Microgames.solar = {
         const PANEL_Y = H * 0.80;
         const panel = {
             x: W / 2 - panelW / 2,
-            dir: 1,
+            dir: Math.random() < 0.5 ? 1 : -1,
             speed: panelSpeed,
             update() {
                 this.x += this.speed * this.dir;
@@ -62,6 +62,15 @@ window.Microgames.solar = {
             get right() { return this.x + panelW; },
             get centerX() { return this.x + panelW / 2; }
         };
+
+        /* ---- Input ----------------------------------------- */
+        function onInput(e) {
+            if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') {
+                panel.dir = -1;
+            } else if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') {
+                panel.dir = 1;
+            }
+        }
 
         /* ---- Rayo: ángulo determinado por la posición del ratón ---- */
         // El rayo parte del sol y apunta hacia donde está el cursor.
@@ -314,6 +323,7 @@ window.Microgames.solar = {
 
         /* ---- Cleanup --------------------------------------- */
         return {
+            onInput,
             cleanup() {
                 finished = true;
                 cancelAnimationFrame(rafId);
