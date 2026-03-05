@@ -9,6 +9,7 @@ class Game {
         this.currentMicrogame = null;
         this.lastMicrogameId = null;
         this.isGameActive = false;
+        this.gracePending = false;  // true cuando el timer llegó a 0 y esperamos gracia
 
         // DOM Elements
         this.screens = {
@@ -113,6 +114,8 @@ class Game {
         }
 
         clearInterval(this.gameInterval);
+        this.gracePending = false;
+        this.hud.timerBar.style.animation = '';
         this.hud.interactiveArea.innerHTML = ''; // Clear previous
 
         // Difficulty Scaling: Every 10 points, time decreases by 400ms
@@ -145,20 +148,35 @@ class Game {
         if (!this.isGameActive) return;
 
         this.timer -= 16;
-        const pct = (this.timer / this.maxTime) * 100;
+        const pct = Math.max(0, (this.timer / this.maxTime) * 100);
         this.hud.timerBar.style.width = `${pct}%`;
 
-        // Color change urgency
-        if (pct < 30) this.hud.timerBar.style.backgroundColor = '#ff0055';
-        else this.hud.timerBar.style.backgroundColor = '';
+        if (this.timer <= 0 && !this.gracePending) {
+            // Timer llegó a 0 → activar periodo de gracia de 2.5 s
+            this.gracePending = true;
+            this.hud.timerBar.style.width = '0%';
+            this.hud.timerBar.style.backgroundColor = '#ff0055';
+            this.hud.timerBar.style.animation = 'timerGrace 0.4s infinite alternate';
+            setTimeout(() => {
+                if (this.isGameActive && this.currentMicrogame) {
+                    this.hud.timerBar.style.animation = '';
+                    this.onFail();
+                }
+            }, 600);
+            return;
+        }
 
-        if (this.timer <= 0) {
-            this.onFail();
+        // Color change urgency (solo cuando el timer aún corre)
+        if (!this.gracePending) {
+            if (pct < 30) this.hud.timerBar.style.backgroundColor = '#ff0055';
+            else this.hud.timerBar.style.backgroundColor = '';
         }
     }
 
     onWin() {
         if (!this.isGameActive || !this.currentMicrogame) return;
+        this.gracePending = false;
+        this.hud.timerBar.style.animation = '';
         this.cleanupCurrentGame();
 
         this.score++;
@@ -173,6 +191,8 @@ class Game {
 
     onFail() {
         if (!this.isGameActive || !this.currentMicrogame) return;
+        this.gracePending = false;
+        this.hud.timerBar.style.animation = '';
         this.cleanupCurrentGame();
 
         this.lives--;
@@ -224,6 +244,10 @@ style.textContent = `
     80% { transform: translate(-1px, -1px) rotate(1deg); }
     90% { transform: translate(1px, 2px) rotate(0deg); }
     100% { transform: translate(1px, -2px) rotate(-1deg); }
+}
+@keyframes timerGrace {
+    from { opacity: 1; box-shadow: 0 0 8px #ff0055; }
+    to   { opacity: 0.3; box-shadow: 0 0 20px #ff0055; }
 }
 `;
 document.head.appendChild(style);

@@ -42,9 +42,10 @@ window.Microgames.cooking = {
         plate.innerHTML = '🍳';
         cookingContainer.appendChild(plate);
 
-        // All available ingredients (shuffled)
+        // Limitar opciones a 8 (los 3 correctos + 5 distractores al azar)
         const allIngredients = ['🍞', '🍅', '🧀', '🍔', '🥩', '🥬', '🥒', '🍚', '🐟', '🥢', '🥚', '🥓', '🍄', '🌽'];
-        const pool = [...allIngredients].sort(() => Math.random() - 0.5);
+        const wrongIngredients = allIngredients.filter(ing => !recipe.ingredients.includes(ing)).sort(() => Math.random() - 0.5);
+        const pool = [...recipe.ingredients, ...wrongIngredients.slice(0, 5)].sort(() => Math.random() - 0.5);
 
         const ingredientGrid = document.createElement('div');
         ingredientGrid.className = 'ingredient-grid';
@@ -141,26 +142,27 @@ window.Microgames.cooking = {
             }
             .ingredient-grid {
                 display: grid;
-                grid-template-columns: repeat(7, 1fr);
-                gap: 10px;
+                grid-template-columns: repeat(4, 1fr);
+                gap: 20px;
                 margin-top: auto;
+                margin-bottom: 20px;
             }
             .ing-btn {
-                font-size: 1.8rem;
+                font-size: 4rem;
                 background: white;
-                width: 50px;
-                height: 50px;
+                width: 100px;
+                height: 100px;
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                border-radius: 12px;
+                border-radius: 20px;
                 cursor: pointer;
-                box-shadow: 0 4px 0 #ddd;
+                box-shadow: 0 6px 0 #ddd;
                 transition: all 0.1s;
                 user-select: none;
             }
             .ing-btn:active {
-                transform: translateY(2px);
+                transform: translateY(4px);
                 box-shadow: 0 2px 0 #ddd;
             }
             .ing-btn.used {
@@ -194,6 +196,12 @@ window.Microgames.cooking = {
             @media (max-width: 600px) {
                 .ingredient-grid {
                     grid-template-columns: repeat(4, 1fr);
+                    gap: 10px;
+                }
+                .ing-btn {
+                    width: 70px;
+                    height: 70px;
+                    font-size: 2.8rem;
                 }
             }
         `;

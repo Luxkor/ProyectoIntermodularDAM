@@ -51,10 +51,9 @@ window.Microgames.pigeon = {
         var PLAYER_SPEED = 5 + Math.min(4, diff * 0.6);
         var SPAWN_MS = Math.max(120, 450 - diff * 50);  // spawn más frecuente
         var BULLET_SPEED = 6 + diff * 1.2;                  // velocidad base alta y escala rápido
-        // SURVIVE_MS siempre 80% del timer del juego padre → dispara ANTES que game.js
-        // Así sobrevivir el tiempo = victoria garantizada, no onFail accidental.
+        // Sobrevivir el tiempo exacto del juego principal
         var gameMaxTime = (game && game.maxTime) ? game.maxTime : 4000;
-        var SURVIVE_MS = Math.floor(gameMaxTime * 0.80);
+        var SURVIVE_MS = gameMaxTime;
 
         /* ---- Estado del juego ------------------------------- */
         var player = { x: W / 2, y: H * 0.72, r: 22, wing: 0, flip: false };
