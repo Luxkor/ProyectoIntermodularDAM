@@ -1,0 +1,19 @@
+On branch Cambios-sistema-de-archivos
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+	deleted:    "Dise\303\261o/js/game.js"
+	deleted:    "Dise\303\261o/js/microgames/beach.js"
+	deleted:    "Dise\303\261o/js/microgames/cooking.js"
+	deleted:    "Dise\303\261o/js/microgames/solar.js"
+	deleted:    "Dise\303\261o/js/microgames/trash_truck.js"
+	deleted:    "Dise\303\261o/js/microgames/xray.js"
+	renamed:    "Dise\303\261o/css/style.css" -> assets/css/style.css
+	renamed:    "Dise\303\261o/img/kanban_dia5.png" -> assets/img/kanban_dia5.png
+	renamed:    "Dise\303\261o/img/kanban_dia7.png" -> assets/img/kanban_dia7.png
+	renamed:    "Dise\303\261o/img/tablero_kanban.png" -> assets/img/tablero_kanban.png
+	renamed:    "Dise\303\261o/index.html" -> index.html
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	git_status.txt
+
