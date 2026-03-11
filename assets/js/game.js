@@ -9,6 +9,7 @@ class Game {
         this.currentMicrogame = null;
         this.lastMicrogameId = null;
         this.isGameActive = false;
+        this.selectedMicrogame = null;
 
         // DOM Elements
         this.screens = {
@@ -26,8 +27,17 @@ class Game {
         };
 
         // Bindings
-        document.getElementById('start-btn').addEventListener('click', () => this.startGame());
+        document.getElementById('start-btn').addEventListener('click', () => this.showMicrogameSelection());
+        document.getElementById('random-btn').addEventListener('click', () => this.startRandomMode());
         document.getElementById('restart-btn').addEventListener('click', () => this.resetGame());
+
+        // Back button in selection menu
+        const backSelectBtn = document.getElementById('back-select-btn');
+        if (backSelectBtn) backSelectBtn.addEventListener('click', () => this.hideMicrogameSelection());
+
+        // Menu Button in Game Screen
+        const menuBtn = document.getElementById('menu-btn');
+        if (menuBtn) menuBtn.addEventListener('click', () => this.goToMenu());
 
         // Global Input Listener
         document.addEventListener('keydown', (e) => {
@@ -50,6 +60,62 @@ class Game {
 
         // Microgames Registry
         this.microgames = Object.values(window.Microgames || {});
+        this.generateMicrogamesGrid();
+    }
+
+    generateMicrogamesGrid() {
+        const grid = document.getElementById('microgames-grid');
+        if (!grid) return;
+
+        grid.innerHTML = '';
+        this.microgames.forEach(microgame => {
+            const btn = document.createElement('button');
+            btn.className = 'microgame-btn';
+            btn.textContent = microgame.instruction;
+            btn.addEventListener('click', () => this.selectMicrogame(microgame.id, btn));
+            grid.appendChild(btn);
+        });
+    }
+
+    selectMicrogame(microgameId, btnElement) {
+        // Actualizar selección visual
+        document.querySelectorAll('.microgame-btn').forEach(btn => {
+            btn.classList.remove('selected');
+        });
+        btnElement.classList.add('selected');
+
+        // Guardar selección
+        this.selectedMicrogame = microgameId;
+        
+        // Iniciar juego
+        this.startGame();
+    }
+
+    showMicrogameSelection() {
+        const section = document.getElementById('microgames-section');
+        const buttons = document.querySelector('.menu-buttons');
+        if (section) {
+            section.style.display = 'flex';
+            buttons.style.display = 'none';
+        }
+    }
+
+    hideMicrogameSelection() {
+        const section = document.getElementById('microgames-section');
+        const buttons = document.querySelector('.menu-buttons');
+        if (section) {
+            section.style.display = 'none';
+            buttons.style.display = 'flex';
+            document.querySelectorAll('.microgame-btn').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            this.selectedMicrogame = null;
+        }
+    }
+
+    startRandomMode() {
+        this.selectedMicrogame = null;
+        this.startGame();
     }
 
     openDiary() {
@@ -76,9 +142,13 @@ class Game {
         this.lives = 4;
         this.score = 0;
         this.baseTime = 4000;
+        this.selectedMicrogame = null;
+        document.querySelectorAll('.microgame-btn').forEach(btn => {
+            btn.classList.remove('selected');
+        });
         this.updateLivesDisplay();
         this.updateScoreDisplay();
-        this.startGame();
+        this.switchScreen('start');
     }
 
     startGame() {
@@ -121,9 +191,15 @@ class Game {
 
         this.timer = this.maxTime;
 
-        // Pick Random Game (Avoiding repeats)
-        const pool = this.microgames.filter(m => m.id !== this.lastMicrogameId);
-        const gameDef = pool[Math.floor(Math.random() * pool.length)];
+        // Pick Microgame (Selected or Random)
+        let gameDef;
+        if (this.selectedMicrogame) {
+            // Use selected microgame
+            gameDef = this.microgames.find(m => m.id === this.selectedMicrogame);
+        } else {
+            // Pick Random Game - Equal probability for all
+            gameDef = this.microgames[Math.floor(Math.random() * this.microgames.length)];
+        }
         this.lastMicrogameId = gameDef.id;
 
         // Setup UI
@@ -210,6 +286,21 @@ class Game {
         this.cleanupCurrentGame();
         this.hud.finalScore.textContent = this.score;
         this.switchScreen('gameOver');
+    }
+
+    goToMenu() {
+        this.isGameActive = false;
+        this.cleanupCurrentGame();
+        this.lives = 4;
+        this.score = 0;
+        this.baseTime = 4000;
+        this.selectedMicrogame = null;
+        document.querySelectorAll('.microgame-btn').forEach(btn => {
+            btn.classList.remove('selected');
+        });
+        this.updateLivesDisplay();
+        this.updateScoreDisplay();
+        this.switchScreen('start');
     }
 }
 

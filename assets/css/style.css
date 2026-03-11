@@ -398,6 +398,72 @@ p {
     font-size: 1rem;
 }
 
+/* Microgames Selection */
+.microgames-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 2px solid rgba(255, 255, 255, 0.1);
+    width: 100%;
+    max-width: 900px;
+}
+
+.microgames-section h2 {
+    font-size: 1.5rem;
+    text-transform: uppercase;
+    color: var(--primary-color);
+    text-shadow: 0 0 20px rgba(0, 243, 255, 0.3);
+}
+
+.microgames-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 1rem;
+    width: 100%;
+    max-width: 900px;
+}
+
+.microgame-btn {
+    padding: 1rem;
+    background: var(--glass-bg);
+    border: 2px solid var(--glass-border);
+    border-radius: 12px;
+    color: white;
+    font-size: 0.9rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    text-align: center;
+    word-wrap: break-word;
+    min-height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.microgame-btn:hover {
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+    color: var(--bg-color);
+    transform: scale(1.05);
+    box-shadow: 0 0 30px rgba(0, 243, 255, 0.5);
+}
+
+.microgame-btn:active {
+    transform: scale(0.95);
+}
+
+.microgame-btn.selected {
+    background: var(--accent-color);
+    border-color: var(--accent-color);
+    color: var(--bg-color);
+    box-shadow: 0 0 20px rgba(255, 230, 0, 0.6);
+}
+
 /* Scrollbar for diary */
 .modal-content::-webkit-scrollbar {
     width: 8px;
@@ -451,6 +517,34 @@ p {
 .trash-item:active {
     cursor: grabbing;
     transform: scale(1.1);
+}
+
+/* Menu Button in Game Screen */
+.menu-btn {
+    position: absolute;
+    top: 20px;
+    right: 80px;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+}
+
+.menu-btn:hover {
+    background: var(--secondary-color);
+    color: white;
+    transform: scale(1.1);
+    box-shadow: 0 0 15px var(--secondary-color);
 }
 
 /* Fullscreen Button */
