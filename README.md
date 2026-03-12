@@ -1,2 +1,2 @@
-# ProyectoIntermodularDAM
-Videojuego
+# Proyecto IA Lucas y Alfonso
+Microjuegos
